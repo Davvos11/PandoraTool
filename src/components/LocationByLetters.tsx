@@ -1,10 +1,10 @@
-import {ToolCard} from "./ToolCard";
-import {Alert, Button, Col, Form, InputGroup, Row} from "react-bootstrap";
-import React, {useEffect, useState} from "react";
-import {Artwork, artworks, Building, buildings} from "../data";
+import { ToolCard } from "./ToolCard";
+import { Col, Form, InputGroup } from "react-bootstrap";
+import React, { useState } from "react";
+import { Artwork, artworks, Building, buildings } from "../data";
 import style from "./LocationByLetters.module.css";
 
-const includes = (letters: string[], word: string) => {
+const includesLetters = (letters: string[], word: string) => {
     const wordLetters = word.toLowerCase().split('')
 
     return letters.map(letter => {
@@ -14,11 +14,24 @@ const includes = (letters: string[], word: string) => {
     }).every(e => e)
 }
 
-const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<boolean>>) =>
-    setter(e.target.checked);
+const includesPattern = (pattern: string, word: string) => {
+    return word.toLowerCase().includes(pattern.toLowerCase());
+}
+
+const matchesCondition = (letters: string, pattern: string, word: string) => {
+    const hasLetters = letters !== "";
+    const hasPattern = pattern !== "";
+    const letterArray = letters.toLowerCase().split('');
+    return (!hasLetters || includesLetters(letterArray, word)) && (!hasPattern || includesPattern(pattern, word))
+}
+
+const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setter(e.target.checked)
+};
 
 export const LocationByLetters = () => {
     const [letters, setLetters] = useState<string>("");
+    const [pattern, setPattern] = useState<string>("");
 
     const [buildingNames, setBuildingNames] = useState<Building[]>([]);
     const [buildingTranslations, setBuildingTranslations] = useState<Building[]>([]);
@@ -30,8 +43,21 @@ export const LocationByLetters = () => {
     const [searchAN, setSearchAN] = useState<boolean>(true); /*Artwork Name*/
     const [searchAT, setSearchAT] = useState<boolean>(false); /*Artwork Translation*/
 
-    useEffect(() => {
-        if (letters === undefined || letters === "") {
+    const updateLetters = (letters: string) => {
+        setLetters(letters);
+        updateSearch(letters, pattern)
+    }
+
+    const updatePattern = (pattern: string) => {
+        setPattern(pattern);
+        updateSearch(letters, pattern)
+    }
+
+    const updateSearch = (_letters: string, _pattern: string) => {
+        const hasLetters = _letters !== "";
+        const hasPattern = _pattern !== "";
+        setLetters(_letters);
+        if (!hasLetters && !hasPattern) {
             setBuildingNames([]);
             setBuildingTranslations([]);
             setArtworkNames([])
@@ -39,74 +65,79 @@ export const LocationByLetters = () => {
             return;
         }
 
-        const letterArray = letters.toLowerCase().split('');
+        setBuildingNames(buildings.filter(b => {
+            return matchesCondition(_letters, _pattern, b.name)
+        }));
+        setBuildingTranslations(buildings.filter(b => {
+            return matchesCondition(_letters, _pattern, b.translation)
+        }));
+        setArtworkNames(artworks.filter(a => {
+            return matchesCondition(_letters, _pattern, a.name)
+        }));
+        setArtworkTranslations(artworks.filter(a => {
+            return matchesCondition(_letters, _pattern, a.translation)
+        }));
+    }
 
+    const renderBuildings = () => {
+        const allNames: Building[] = [];
         if (searchBN) {
-            setBuildingNames(buildings.filter(b => {
-                return includes(letterArray, b.name)
-            }));
+            allNames.push(...buildingNames)
         }
-        if (searchBN) {
-            setArtworkTranslations(buildings.filter(b => {
-                return includes(letterArray, b.translation)
-            }));
+        if (searchBT) {
+            allNames.push(...buildingTranslations)
         }
+        const union = Array.from(new Set(allNames))
+        return <>{union.map(b => <li>{b.name}<br /> {searchBT && (<i>({b.translation})</i>)}</li>)}</>
+    }
+
+    const renderArtworks = () => {
+        const allNames: Artwork[] = [];
         if (searchAN) {
-            setArtworkNames(artworks.filter(a => {
-                return includes(letterArray, a.name)
-            }));
+            allNames.push(...artworkNames)
         }
         if (searchAT) {
-            setArtworkTranslations(artworks.filter(a => {
-                return includes(letterArray, a.translation)
-            }));
+            allNames.push(...artworkTranslations)
         }
-
-    }, [letters, searchBN, searchBT, searchAN, searchAT])
+        const union = Array.from(new Set(allNames))
+        return <>{union.map(b => <li>{b.name}<br /> {searchAT && (<i>({b.translation})</i>)}</li>)}</>
+    }
 
     return <ToolCard title={"Find location with"}>
-        <Col style={{textAlign: "left"}}>
+        <Col style={{ textAlign: "left" }}>
             <InputGroup>
                 <InputGroup.Text id="location-letters-addon">Letters</InputGroup.Text>
                 <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
-                              onChange={e => setLetters(e.target.value)} value={letters}/>
-                <Button variant="primary">Search</Button>
+                    onChange={e => updateLetters(e.target.value)} value={letters} />
+            </InputGroup>
+            <InputGroup>
+                <InputGroup.Text id="location-pattern-addon">Pattern</InputGroup.Text>
+                <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
+                    onChange={e => updatePattern(e.target.value)} value={pattern} />
             </InputGroup>
             <Form>
                 <Form.Check id="check-bn" label="Building names" checked={searchBN}
-                            onChange={e => handleCheckbox(e, setSearchBN)}/>
+                    onChange={e => handleCheckbox(e, setSearchBN)} />
                 <Form.Check id="check-bt" label="Building translations" checked={searchBT}
-                            onChange={e => handleCheckbox(e, setSearchBT)}/>
+                    onChange={e => handleCheckbox(e, setSearchBT)} />
                 <Form.Check id="check-an" label="Artwork names" checked={searchAN}
-                            onChange={e => handleCheckbox(e, setSearchAN)}/>
+                    onChange={e => handleCheckbox(e, setSearchAN)} />
                 <Form.Check id="check-at" label="Artwork translations" checked={searchAT}
-                            onChange={e => handleCheckbox(e, setSearchAT)}/>
+                    onChange={e => handleCheckbox(e, setSearchAT)} />
             </Form>
             <div className={style.results}>
-                {searchBN ?
+                {
                     <><b>Buildings:</b>
                         <ul>
-                            {buildingNames.map(b => <li>{b.name}</li>)}
+                            {renderBuildings()}
                         </ul>
-                    </> : null}
-                {searchBT ?
-                    <><b>Building translations:</b>
-                        <ul>
-                            {buildingTranslations.map(b => <li>{b.name}<br/><i>({b.translation})</i></li>)}
-                        </ul>
-                    </> : null}
-                {searchAN ?
+                    </>}
+                {
                     <><b>Artworks:</b>
                         <ul>
-                            {artworkNames.map(a => <li>{a.name}</li>)}
+                            {renderArtworks()}
                         </ul>
-                    </> : null}
-                {searchAT ?
-                    <><b>Artwork translations:</b>
-                        <ul>
-                            {artworkTranslations.map(a => <li>{a.name}<br/><i>({a.translation})</i></li>)}
-                        </ul>
-                    </> : null}
+                    </>}
             </div>
         </Col>
     </ToolCard>
