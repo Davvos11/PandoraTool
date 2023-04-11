@@ -3,6 +3,7 @@ import './App.css';
 import {Col, Container, Row} from "react-bootstrap";
 import {ToolCard} from "./components/ToolCard";
 import {BuildingByNumber} from "./components/BuildingByNumber";
+import {LocationByLetters} from "./components/LocationByLetters";
 
 function App() {
     return (
@@ -12,8 +13,9 @@ function App() {
                     <Col>
                         <BuildingByNumber />
                     </Col>
-                    <Col><ToolCard title={"Test"}>Test</ToolCard></Col>
-                    <Col><ToolCard title={"Test"}>Test</ToolCard></Col>
+                    <Col>
+                        <LocationByLetters />
+                    </Col>
                 </Row>
             </Container>
         </div>
