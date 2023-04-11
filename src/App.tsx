@@ -8,7 +8,7 @@ function App() {
     return (
         <div className="App">
             <Container>
-                <Row>
+                <Row className="gy-3">
                     <Col xs={12} md={6}>
                         <BuildingByNumber />
                     </Col>

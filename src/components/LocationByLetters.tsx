@@ -1,7 +1,8 @@
-import {ToolCard} from "./ToolCard";
-import {Alert, Button, Col, Form, InputGroup, Row} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
+import {Button, Col, Form, InputGroup} from "react-bootstrap";
+
 import {Artwork, artworks, Building, buildings} from "../data";
+import {ToolCard} from "./ToolCard";
 import style from "./LocationByLetters.module.css";
 
 const includes = (letters: string[], word: string) => {
@@ -66,13 +67,13 @@ export const LocationByLetters = () => {
 
     return <ToolCard title={"Find location with"}>
         <Col style={{textAlign: "left"}}>
-            <InputGroup>
+            <InputGroup className="mt-2">
                 <InputGroup.Text id="location-letters-addon">Letters</InputGroup.Text>
                 <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
                               onChange={e => setLetters(e.target.value)} value={letters}/>
                 <Button variant="primary">Search</Button>
             </InputGroup>
-            <Form>
+            <Form className="mt-2">
                 <Form.Check id="check-bn" label="Building names" checked={searchBN}
                             onChange={e => handleCheckbox(e, setSearchBN)}/>
                 <Form.Check id="check-bt" label="Building translations" checked={searchBT}
@@ -82,7 +83,7 @@ export const LocationByLetters = () => {
                 <Form.Check id="check-at" label="Artwork translations" checked={searchAT}
                             onChange={e => handleCheckbox(e, setSearchAT)}/>
             </Form>
-            <div className={style.results}>
+            <div className={`mt-2 ${style.results}`}>
                 {searchBN ?
                     <><b>Buildings:</b>
                         <ul>
