@@ -1,6 +1,6 @@
-import React from 'react';
-import './App.css';
 import {Col, Container, Row} from "react-bootstrap";
+
+import './App.css';
 import {BuildingByNumber} from "./components/BuildingByNumber";
 import {LocationByLetters} from "./components/LocationByLetters";
 
