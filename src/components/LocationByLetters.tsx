@@ -2,10 +2,16 @@ import {ToolCard} from "./ToolCard";
 import {Alert, Button, Col, Form, InputGroup, Row} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Artwork, artworks, Building, buildings} from "../data";
+import style from "./LocationByLetters.module.css";
 
-const subsetOf = (letters: string[], of: string) => {
-    const set = new Set(of.toLowerCase());
-    return letters.every(x => set.has(x));
+const includes = (letters: string[], word: string) => {
+    const wordLetters = word.toLowerCase().split('')
+
+    return letters.map(letter => {
+        const inQuery = letters.filter(l => l === letter).length;
+        const inWord = wordLetters.filter(l => l === letter).length;
+        return inQuery <= inWord;
+    }).every(e => e)
 }
 
 const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<boolean>>) =>
@@ -37,22 +43,22 @@ export const LocationByLetters = () => {
 
         if (searchBN) {
             setBuildingNames(buildings.filter(b => {
-                return subsetOf(letterArray, b.name)
+                return includes(letterArray, b.name)
             }));
         }
         if (searchBN) {
             setArtworkTranslations(buildings.filter(b => {
-                return subsetOf(letterArray, b.translation)
+                return includes(letterArray, b.translation)
             }));
         }
         if (searchAN) {
             setArtworkNames(artworks.filter(a => {
-                return subsetOf(letterArray, a.name)
+                return includes(letterArray, a.name)
             }));
         }
         if (searchAT) {
             setArtworkTranslations(artworks.filter(a => {
-                return subsetOf(letterArray, a.translation)
+                return includes(letterArray, a.translation)
             }));
         }
 
@@ -76,7 +82,7 @@ export const LocationByLetters = () => {
                 <Form.Check id="check-at" label="Artwork translations" checked={searchAT}
                             onChange={e => handleCheckbox(e, setSearchAT)}/>
             </Form>
-            <div style={{height: "30vh", overflowY: "scroll"}}>
+            <div className={style.results}>
                 {searchBN ?
                     <><b>Buildings:</b>
                         <ul>
@@ -86,7 +92,7 @@ export const LocationByLetters = () => {
                 {searchBT ?
                     <><b>Building translations:</b>
                         <ul>
-                            {buildingTranslations.map(b => <li>{b.name}</li>)}
+                            {buildingTranslations.map(b => <li>{b.name}<br/><i>({b.translation})</i></li>)}
                         </ul>
                     </> : null}
                 {searchAN ?
@@ -98,7 +104,7 @@ export const LocationByLetters = () => {
                 {searchAT ?
                     <><b>Artwork translations:</b>
                         <ul>
-                            {artworkTranslations.map(a => <li>{a.name}</li>)}
+                            {artworkTranslations.map(a => <li>{a.name}<br/><i>({a.translation})</i></li>)}
                         </ul>
                     </> : null}
             </div>

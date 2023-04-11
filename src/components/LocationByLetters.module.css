@@ -1,0 +1,9 @@
+.results {
+    height: 30vh;
+    overflow-y: scroll;
+}
+
+.results i {
+    font-size: 0.8em;
+
+}
