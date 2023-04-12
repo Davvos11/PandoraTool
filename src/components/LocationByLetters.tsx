@@ -111,7 +111,7 @@ export const LocationByLetters = () => {
                 <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
                     onChange={e => updateLetters(e.target.value)} value={letters} />
             </InputGroup>
-            <InputGroup>
+            <InputGroup className="mt-2">
                 <InputGroup.Text id="location-pattern-addon">Pattern</InputGroup.Text>
                 <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
                     onChange={e => updatePattern(e.target.value)} value={pattern} />
