@@ -1,7 +1,7 @@
-import { ToolCard } from "./ToolCard";
-import { Alert, Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { useMemo, useState, useEffect } from "react";
-import { buildings } from "../data";
+import {ToolCard} from "./ToolCard";
+import {Button, Col, Form, InputGroup} from "react-bootstrap";
+import {useMemo, useState} from "react";
+import {buildings} from "../data";
 
 
 export const BuildingByNumber = () => {
@@ -16,7 +16,7 @@ export const BuildingByNumber = () => {
 
     }
 
-    const getBuilding = useMemo(() => {
+    const result = useMemo(() => {
         const building = buildings.find(b => b.number === Number(number));
         if (number === undefined || building === undefined) {
             return ''
@@ -24,8 +24,6 @@ export const BuildingByNumber = () => {
             return building.name
         }
     }, [number])
-
-    const result = getBuilding
 
     const error = !!number && !result.length
 

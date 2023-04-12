@@ -1,6 +1,6 @@
-import { Button, Card, Image, Modal } from "react-bootstrap"
+import { Image } from "react-bootstrap"
 import { ToolCard } from "./ToolCard"
-import { useState } from "react";
+import React from "react";
 
 interface Props {
   setShowMap: React.Dispatch<React.SetStateAction<boolean>>

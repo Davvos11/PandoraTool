@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Button, Col, Form, InputGroup} from "react-bootstrap";
+import React, {useState} from "react";
+import {Col, Form, InputGroup} from "react-bootstrap";
 
 import {Artwork, artworks, Building, buildings} from "../data";
 import {ToolCard} from "./ToolCard";
