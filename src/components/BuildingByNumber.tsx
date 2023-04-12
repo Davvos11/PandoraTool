@@ -16,7 +16,6 @@ export const BuildingByNumber = () => {
     }
 
     const getBuilding = useMemo(() => {
-        console.log('hi')
         const building = buildings.find(b => b.number === Number(number));
         if (number === undefined || building === undefined) {
             return ''
