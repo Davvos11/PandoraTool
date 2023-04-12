@@ -6,12 +6,13 @@ import { LocationByLetters } from "./components/LocationByLetters";
 import { CampusMap } from './components/CampusMap';
 import { MapModal } from './components/MapModal';
 
+
 function App() {
     const [showMap, setShowMap] = useState(false);
     return (
         <div className="App">
             <Container>
-                <Row>
+                <Row className="gy-3">
                     <Col xs={12} md={6}>
                         <BuildingByNumber />
                         <br /> {/* <br /> go brrrr */}
