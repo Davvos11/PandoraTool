@@ -16,7 +16,7 @@ export const MapModal = ({ show, setShow }: Props) => {
     animation={false}
   >
     <Modal.Body onClick={() => handleClose()}>
-      <Image className={"modal-image"} src={'campus-map.jpg'} alt={'Campus map'} />
+      <Image className={"modal-image"} src={'pandora_campusmap.png'} alt={'Campus map'} />
     </Modal.Body>
   </Modal>
 }

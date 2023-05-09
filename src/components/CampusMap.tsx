@@ -12,7 +12,7 @@ export const CampusMap = ({ setShowMap }: Props) => {
 
   return <>
     <ToolCard title={'Campus map'}>
-      <Image onClick={(handleShow)} src={'campus-map.jpg'} alt={'Campus map'} width={'100%'} />
+      <Image onClick={(handleShow)} src={'pandora_campusmap.png'} alt={'Campus map'} width={'100%'} />
     </ToolCard>
   </>
 }
