@@ -19,7 +19,7 @@ const includesPattern = (pattern: string, word: string) => {
     return word.toLowerCase().includes(pattern.toLowerCase());
 }
 
-const matchesCondition = (letters: string, pattern: string, lengthString: string, word: string) => {
+const matchesCondition = (letters: string, pattern: string, lengthString: string, countSpaces: boolean, word: string) => {
     const hasLetters = letters !== "";
     const hasPattern = pattern !== "";
     const hasLength = lengthString !== "";
@@ -29,7 +29,8 @@ const matchesCondition = (letters: string, pattern: string, lengthString: string
     const letterArray = letters.toLowerCase().split('');
     return (!hasLetters || includesLetters(letterArray, word))
         && (!hasPattern || includesPattern(pattern, word))
-        && (!hasLength || word.length === length);
+        && (!hasLength || (countSpaces ? word.length === length :
+            word.replaceAll(" ", '').length == length));
 }
 
 const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
@@ -51,23 +52,30 @@ export const LocationByLetters = () => {
     const [searchAN, setSearchAN] = useState<boolean>(true); /*Artwork Name*/
     const [searchAT, setSearchAT] = useState<boolean>(false); /*Artwork Translation*/
 
+    const [countSpaces, setCountSpaces] = useState<boolean>(false);
+
     const updateLetters = (letters: string) => {
         setLetters(letters);
-        updateSearch(letters, pattern, length)
+        updateSearch(letters, pattern, length, countSpaces)
     }
 
     const updatePattern = (pattern: string) => {
         setPattern(pattern);
-        updateSearch(letters, pattern, length)
+        updateSearch(letters, pattern, length, countSpaces)
     }
 
     const updateLength = (length: string) => {
         setLength(length)
-        updateSearch(letters, pattern, length)
+        updateSearch(letters, pattern, length, countSpaces)
+    }
+
+    const updateCountSpaces = (countSpaces: boolean) => {
+        setCountSpaces(countSpaces)
+        updateSearch(letters, pattern, length, countSpaces)
     }
 
 
-    const updateSearch = (_letters: string, _pattern: string, _length: string) => {
+    const updateSearch = (_letters: string, _pattern: string, _length: string, _countSpaces: boolean) => {
         const hasLetters = _letters !== "";
         const hasPattern = _pattern !== "";
         const hasLength = _length !== ""
@@ -83,16 +91,16 @@ export const LocationByLetters = () => {
         }
 
         setBuildingNames(buildings.filter(b => {
-            return matchesCondition(_letters, _pattern, _length, b.name)
+            return matchesCondition(_letters, _pattern, _length, _countSpaces, b.name)
         }));
         setBuildingTranslations(buildings.filter(b => {
-            return matchesCondition(_letters, _pattern, _length, b.translation)
+            return matchesCondition(_letters, _pattern, _length, _countSpaces, b.translation)
         }));
         setArtworkNames(artworks.filter(a => {
-            return matchesCondition(_letters, _pattern, _length, a.name)
+            return matchesCondition(_letters, _pattern, _length, _countSpaces, a.name)
         }));
         setArtworkTranslations(artworks.filter(a => {
-            return matchesCondition(_letters, _pattern, _length, a.translation)
+            return matchesCondition(_letters, _pattern, _length, _countSpaces, a.translation)
         }));
     }
 
@@ -105,7 +113,7 @@ export const LocationByLetters = () => {
             allNames.push(...buildingTranslations)
         }
         const union = Array.from(new Set(allNames))
-        return <>{union.map(b => <li>{b.name}<br /> {searchBT && (<i>({b.translation})</i>)}</li>)}</>
+        return <>{union.map(b => <li>{b.name}<br/> {searchBT && (<i>({b.translation})</i>)}</li>)}</>
     }
 
     const renderArtworks = () => {
@@ -117,36 +125,40 @@ export const LocationByLetters = () => {
             allNames.push(...artworkTranslations)
         }
         const union = Array.from(new Set(allNames))
-        return <>{union.map(b => <li>{b.name}<br /> {searchAT && (<i>({b.translation})</i>)}</li>)}</>
+        return <>{union.map(b => <li>{b.name}<br/> {searchAT && (<i>({b.translation})</i>)}</li>)}</>
     }
 
     return <ToolCard title={"Find location with"}>
-        <Col style={{ textAlign: "left" }}>
+        <Col style={{textAlign: "left"}}>
             <InputGroup className="mt-2">
                 <InputGroup.Text id="location-letters-addon">Letters</InputGroup.Text>
                 <Form.Control aria-label="Letters" aria-describedby="location-letters-addon"
-                    onChange={e => updateLetters(e.target.value)} value={letters} />
+                              onChange={e => updateLetters(e.target.value)} value={letters}/>
             </InputGroup>
             <InputGroup className="mt-2">
                 <InputGroup.Text id="location-pattern-addon">Pattern</InputGroup.Text>
                 <Form.Control aria-label="Pattern" aria-describedby="location-pattern-addon"
-                    onChange={e => updatePattern(e.target.value)} value={pattern} />
+                              onChange={e => updatePattern(e.target.value)} value={pattern}/>
             </InputGroup>
             <InputGroup className="mt-2">
                 <InputGroup.Text id="location-length-addon">Length</InputGroup.Text>
                 <Form.Control aria-label="Length" aria-describedby="location-length-addon"
                               type="number"
-                              onChange={e => updateLength(e.target.value)} value={length} />
+                              onChange={e => updateLength(e.target.value)} value={length}/>
+                <InputGroup.Text>
+                    <Form.Check id="check-spaces" label="Count spaces" checked={countSpaces}
+                                onChange={e => updateCountSpaces(e.target.checked)}/>
+                </InputGroup.Text>
             </InputGroup>
             <Form className="mt-2">
                 <Form.Check id="check-bn" label="Building names" checked={searchBN}
-                    onChange={e => handleCheckbox(e, setSearchBN)} />
+                            onChange={e => handleCheckbox(e, setSearchBN)}/>
                 <Form.Check id="check-bt" label="Building translations" checked={searchBT}
-                    onChange={e => handleCheckbox(e, setSearchBT)} />
+                            onChange={e => handleCheckbox(e, setSearchBT)}/>
                 <Form.Check id="check-an" label="Artwork names" checked={searchAN}
-                    onChange={e => handleCheckbox(e, setSearchAN)} />
+                            onChange={e => handleCheckbox(e, setSearchAN)}/>
                 <Form.Check id="check-at" label="Artwork translations" checked={searchAT}
-                    onChange={e => handleCheckbox(e, setSearchAT)} />
+                            onChange={e => handleCheckbox(e, setSearchAT)}/>
             </Form>
             <div className={`mt-2 ${style.results}`}>
                 {
