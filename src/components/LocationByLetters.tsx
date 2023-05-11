@@ -19,11 +19,17 @@ const includesPattern = (pattern: string, word: string) => {
     return word.toLowerCase().includes(pattern.toLowerCase());
 }
 
-const matchesCondition = (letters: string, pattern: string, word: string) => {
+const matchesCondition = (letters: string, pattern: string, lengthString: string, word: string) => {
     const hasLetters = letters !== "";
     const hasPattern = pattern !== "";
+    const hasLength = lengthString !== "";
+
+    const length = Number(lengthString);
+
     const letterArray = letters.toLowerCase().split('');
-    return (!hasLetters || includesLetters(letterArray, word)) && (!hasPattern || includesPattern(pattern, word))
+    return (!hasLetters || includesLetters(letterArray, word))
+        && (!hasPattern || includesPattern(pattern, word))
+        && (!hasLength || word.length === length);
 }
 
 const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<boolean>>) => {
@@ -33,6 +39,7 @@ const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Di
 export const LocationByLetters = () => {
     const [letters, setLetters] = useState<string>("");
     const [pattern, setPattern] = useState<string>("");
+    const [length, setLength] = useState<string>("");
 
     const [buildingNames, setBuildingNames] = useState<Building[]>([]);
     const [buildingTranslations, setBuildingTranslations] = useState<Building[]>([]);
@@ -46,19 +53,28 @@ export const LocationByLetters = () => {
 
     const updateLetters = (letters: string) => {
         setLetters(letters);
-        updateSearch(letters, pattern)
+        updateSearch(letters, pattern, length)
     }
 
     const updatePattern = (pattern: string) => {
         setPattern(pattern);
-        updateSearch(letters, pattern)
+        updateSearch(letters, pattern, length)
     }
 
-    const updateSearch = (_letters: string, _pattern: string) => {
+    const updateLength = (length: string) => {
+        setLength(length)
+        updateSearch(letters, pattern, length)
+    }
+
+
+    const updateSearch = (_letters: string, _pattern: string, _length: string) => {
         const hasLetters = _letters !== "";
         const hasPattern = _pattern !== "";
+        const hasLength = _length !== ""
+
         setLetters(_letters);
-        if (!hasLetters && !hasPattern) {
+
+        if (!hasLetters && !hasPattern && !hasLength) {
             setBuildingNames([]);
             setBuildingTranslations([]);
             setArtworkNames([])
@@ -67,16 +83,16 @@ export const LocationByLetters = () => {
         }
 
         setBuildingNames(buildings.filter(b => {
-            return matchesCondition(_letters, _pattern, b.name)
+            return matchesCondition(_letters, _pattern, _length, b.name)
         }));
         setBuildingTranslations(buildings.filter(b => {
-            return matchesCondition(_letters, _pattern, b.translation)
+            return matchesCondition(_letters, _pattern, _length, b.translation)
         }));
         setArtworkNames(artworks.filter(a => {
-            return matchesCondition(_letters, _pattern, a.name)
+            return matchesCondition(_letters, _pattern, _length, a.name)
         }));
         setArtworkTranslations(artworks.filter(a => {
-            return matchesCondition(_letters, _pattern, a.translation)
+            return matchesCondition(_letters, _pattern, _length, a.translation)
         }));
     }
 
@@ -108,13 +124,19 @@ export const LocationByLetters = () => {
         <Col style={{ textAlign: "left" }}>
             <InputGroup className="mt-2">
                 <InputGroup.Text id="location-letters-addon">Letters</InputGroup.Text>
-                <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
+                <Form.Control aria-label="Letters" aria-describedby="location-letters-addon"
                     onChange={e => updateLetters(e.target.value)} value={letters} />
             </InputGroup>
             <InputGroup className="mt-2">
                 <InputGroup.Text id="location-pattern-addon">Pattern</InputGroup.Text>
-                <Form.Control aria-label="Building number" aria-describedby="location-letters-addon"
+                <Form.Control aria-label="Pattern" aria-describedby="location-pattern-addon"
                     onChange={e => updatePattern(e.target.value)} value={pattern} />
+            </InputGroup>
+            <InputGroup className="mt-2">
+                <InputGroup.Text id="location-length-addon">Length</InputGroup.Text>
+                <Form.Control aria-label="Length" aria-describedby="location-length-addon"
+                              type="number"
+                              onChange={e => updateLength(e.target.value)} value={length} />
             </InputGroup>
             <Form className="mt-2">
                 <Form.Check id="check-bn" label="Building names" checked={searchBN}
