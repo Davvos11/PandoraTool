@@ -24,8 +24,15 @@ export const buildings: Building[] = [
         "explanation": ""
     },
     {
-        "number": 62,
+        "number": 42,
         "name": "Boerderij",
+        "abbreviation": "BOE",
+        "translation": "Farm",
+        "explanation": ""
+    },
+    {
+        "number": 62,
+        "name": "Boerderij Bosch",
         "abbreviation": "BB",
         "translation": "Bosch",
         "explanation": "Farm Bosch"
@@ -91,6 +98,13 @@ export const buildings: Building[] = [
         "name": "The Gallery",
         "abbreviation": "GY",
         "translation": "The Gallery",
+        "explanation": ""
+    },
+    {
+        "number": 17,
+        "name": "Gallerij",
+        "abbreviation": "GY",
+        "translation": "Gallery",
         "explanation": ""
     },
     {
@@ -400,7 +414,77 @@ export const buildings: Building[] = [
         "abbreviation": "ZW",
         "translation": "Pool",
         "explanation": ""
-    }
+    },
+    {
+        "number": 55,
+        "name": "Waterlab",
+        "abbreviation": "WL",
+        "translation": "Water Lab",
+        "explanation": ""
+    },
+    {
+        "number": 17, // TODO support 17A
+        "name": "DesignLab",
+        "abbreviation": "DL",
+        "translation": "Design Lab",
+        "explanation": ""
+    },
+    {
+        "number": 25,
+        "name": "Cube",
+        "abbreviation": "CB",
+        "translation": "Cube",
+        "explanation": ""
+    },
+    {
+        "number": 33,
+        "name": "Fieldlab",
+        "abbreviation": "",
+        "translation": "Field Lab",
+        "explanation": ""
+    },
+    {
+        "number": 39,
+        "name": "Gronddepot",
+        "abbreviation": "",
+        "translation": "Ground Depot",
+        "explanation": ""
+    },
+    {
+        "number": 30,
+        "name": "Hangar",
+        "abbreviation": "HA",
+        "translation": "Hangar",
+        "explanation": ""
+    },
+    {
+        "number": 93,
+        "name": "Koelgebouw 1",
+        "abbreviation": "KG1",
+        "translation": "Cooling building 1",
+        "explanation": ""
+    },
+    {
+        "number": 94,
+        "name": "Koelgebouw 2",
+        "abbreviation": "KG2",
+        "translation": "Cooling building 2",
+        "explanation": ""
+    },
+    {
+        "number": 19,
+        "name": "Langezijds",
+        "abbreviation": "LA",
+        "translation": "Long sides",
+        "explanation": ""
+    },
+    {
+        "number": 58,
+        "name": "Medisch Centrum",
+        "abbreviation": "MC",
+        "translation": "Medical center",
+        "explanation": ""
+    },
 ]
 
 
