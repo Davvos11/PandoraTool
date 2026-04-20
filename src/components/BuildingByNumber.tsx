@@ -25,11 +25,11 @@ export const BuildingByNumber = () => {
     }
 
     const numberResult = useMemo(() => {
-        const building = buildings.find(b => b.number === number);
-        if (number === undefined || building === undefined) {
-            return ''
+        const buildings_filtered = buildings.filter(b => b.number === number);
+        if (number === undefined || buildings_filtered.length === 0) {
+            return []
         } else {
-            return building.name
+            return buildings_filtered.map(building => building.name)
         }
     }, [number])
 
@@ -43,6 +43,7 @@ export const BuildingByNumber = () => {
     }, [abbreviation])
 
     const numberError = !!number && !numberResult.length
+    const extraNumber = false;
     const abbreviationError = !!abbreviation && !abbreviationResult.length
 
     return <ToolCard title={"Find building"}>
@@ -58,6 +59,9 @@ export const BuildingByNumber = () => {
                 <Form.Control readOnly isInvalid={numberError} aria-label="Building"
                               aria-describedby="building-number-result-addon"
                               value={numberError ? `Building ${number} does not exist.` : numberResult}/>
+                {extraNumber ? <Form.Control readOnly isInvalid={numberError} aria-label="Building"
+                              aria-describedby="building-number-result-addon-extra"
+                              value={numberError ? `Building ${number} does not exist.` : numberResult}/> : null}
             </InputGroup>
             <hr />
             <InputGroup className="mt-2">
