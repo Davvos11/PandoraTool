@@ -1,4 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>Davvos11/.github"]
+  "extends": ["github>Davvos11/.github"],
+  "packageRules": [
+    {
+      "description": "Keep TypeScript on 5.x until the app moves off create-react-app: react-scripts uses the TypeScript JS API, which TS 7 doesn't have",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6"
+    }
+  ]
 }
