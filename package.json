@@ -3,7 +3,7 @@
   "homepage": "/pandora",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@11.20.0",
+  "packageManager": "npm@11.21.2",
   "dependencies": {
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.0.0",
